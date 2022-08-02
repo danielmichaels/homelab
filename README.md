@@ -50,7 +50,3 @@ This is not setup for use outside localhost, yet. To get these working `/etc/hos
 <k3a.io/internal-ip> whoami.k8s.dansult.space
 <k3a.io/internal-ip> git.k8s.dansult.space
 ```
-
-```shell
-/usr/local/bin/k3s-uninstall.sh
-```
