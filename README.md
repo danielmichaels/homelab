@@ -40,3 +40,17 @@ k3sup install --ip $IP --user $USER \
 ## Configuration
 
 All the extra configuration files can be found the [k3s](/k3s) directory within this repo.
+
+## Local hosts
+
+This is not setup for use outside localhost, yet. To get these working `/etc/hosts` must be updated
+
+```shell
+<k3a.io/internal-ip> dashboard.k8s.dansult.space 
+<k3a.io/internal-ip> whoami.k8s.dansult.space
+<k3a.io/internal-ip> git.k8s.dansult.space
+```
+
+```shell
+/usr/local/bin/k3s-uninstall.sh
+```
