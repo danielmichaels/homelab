@@ -1,0 +1,114 @@
+image:
+  registry: ""
+  repository: gitea/gitea
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "1.17.0"
+  pullPolicy: Always
+  rootless: false # only possible when running 1.14 or later
+
+gitea:
+  ## @param gitea.admin.username Username for the Gitea admin user
+  ## @param gitea.admin.existingSecret Use an existing secret to store admin user credentials
+  ## @param gitea.admin.password Password for the Gitea admin user
+  ## @param gitea.admin.email Email for the Gitea admin user
+  admin:
+    #existingSecret: gitea-admin-secret
+    existingSecret:
+    username: gitea_admin
+    password: ""
+    email: "gitea@danielms.site"
+  config:
+    APP_NAME: "k8s at home"
+    RUN_MODE: dev
+    server:
+      SSH_PORT: 22
+
+## @section Service
+service:
+  ## @param service.http.type Kubernetes service type for web traffic
+  ## @param service.http.port Port number for web traffic
+  ## @param service.http.clusterIP ClusterIP setting for http autosetup for statefulset is None
+  ## @param service.http.loadBalancerIP LoadBalancer IP setting
+  ## @param service.http.nodePort NodePort for http service
+  ## @param service.http.externalTrafficPolicy If `service.http.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation
+  ## @param service.http.externalIPs External IPs for service
+  ## @param service.http.ipFamilyPolicy HTTP service dual-stack policy
+  ## @param service.http.ipFamilies HTTP service dual-stack familiy selection,for dual-stack parameters see official kubernetes [dual-stack concept documentation](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
+  ## @param service.http.loadBalancerSourceRanges Source range filter for http loadbalancer
+  ## @param service.http.annotations HTTP service annotations
+  http:
+    type: ClusterIP
+    port: 3000
+    clusterIP: None
+    loadBalancerIP:
+    nodePort:
+    externalTrafficPolicy:
+    externalIPs:
+    ipFamilyPolicy:
+    ipFamilies:
+    loadBalancerSourceRanges: []
+    annotations: {}
+  ## @param service.ssh.type Kubernetes service type for ssh traffic
+  ## @param service.ssh.port Port number for ssh traffic
+  ## @param service.ssh.clusterIP ClusterIP setting for ssh autosetup for statefulset is None
+  ## @param service.ssh.loadBalancerIP LoadBalancer IP setting
+  ## @param service.ssh.nodePort NodePort for ssh service
+  ## @param service.ssh.externalTrafficPolicy If `service.ssh.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation
+  ## @param service.ssh.externalIPs External IPs for service
+  ## @param service.ssh.ipFamilyPolicy SSH service dual-stack policy
+  ## @param service.ssh.ipFamilies SSH service dual-stack familiy selection,for dual-stack parameters see official kubernetes [dual-stack concept documentation](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
+  ## @param service.ssh.hostPort HostPort for ssh service
+  ## @param service.ssh.loadBalancerSourceRanges Source range filter for ssh loadbalancer
+  ## @param service.ssh.annotations SSH service annotations
+  ssh:
+    type: ClusterIP
+    port: 22
+    clusterIP: None
+    loadBalancerIP:
+    nodePort:
+    externalTrafficPolicy:
+    externalIPs:
+    ipFamilyPolicy:
+    ipFamilies:
+    hostPort:
+    loadBalancerSourceRanges: []
+    annotations: {}
+## @section Ingress
+## @param ingress.enabled Enable ingress
+## @param ingress.className Ingress class name
+## @param ingress.annotations Ingress annotations
+## @param ingress.hosts[0].host Default Ingress host
+## @param ingress.hosts[0].paths[0].path Default Ingress path
+## @param ingress.hosts[0].paths[0].pathType Ingress path type
+## @param ingress.tls Ingress tls settings
+## @extra ingress.apiVersion Specify APIVersion of ingress object. Mostly would only be used for argocd.
+ingress:
+  enabled: true
+  # className: nginx
+  className:
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: git.k8s.dansult.space
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - git.example.com
+  # Mostly for argocd or any other CI that uses `helm template | kubectl apply` or similar
+  # If helm doesn't correctly detect your ingress API version you can set it here.
+  # apiVersion: networking.k8s.io/v1
+
+postgresql:
+  enabled: true
+  global:
+    postgresql:
+      postgresqlDatabase: gitea
+      postgresqlUsername: gitea
+      postgresqlPassword: gitea
+      servicePort: 5432
+  persistence:
+    size: 10Gi

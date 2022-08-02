@@ -1,0 +1,10 @@
+mirrors:
+  git.k8s.dansult.space:
+    endpoint:
+      - "http://git.k8s.dansult.space"
+
+configs:
+  "git.k8s.dansult.space":
+    auth:
+      username: ${GITEA_USERNAME}
+      password: ${GITEA_PASSWORD}
