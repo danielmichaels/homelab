@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: example-app
+  namespace: example-app
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: example-app
+  project: default
+  source:
+    repoURL: https://github.com/danielmichaels/k8s-at-home.git
+    targetRevision: argocd
+    path: argocd/example-app
+
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+
+    automated:
+      selfHeal: true
+      prune: true
