@@ -1,0 +1,30 @@
+---
+kind: pipeline
+type: kubernetes
+name: drone
+
+steps:
+- name: build-push
+  image: docker:dind
+  volumes:
+  - name: dockersock
+    path: /var/run
+  environment:
+    DOCKER_USER:
+      from_secret: DOCKER_USER
+    DOCKER_PASSWORD:
+      from_secret: DOCKER_PASSWORD
+  commands:
+  - sleep 5 # give docker enough time to start
+  - echo "ci working"
+
+services:
+- name: docker
+  image: docker:dind
+  privileged: true
+  volumes:
+  - name: dockersock
+    path: /var/run
+volumes:
+- name: dockersock
+  temp: {}

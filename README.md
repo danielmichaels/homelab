@@ -25,11 +25,13 @@ sh -
 OR use [k3sup](https://github.com/alexellis/k3sup)
 
 ```shell
-export USER=foo
-export IP=1.2.3.4
+export USER=dan
+export IP=192.168.20.101
 k3sup install --ip $IP --user $USER \
+#k3sup install .  \
  --local-path=./kube-remote \
-  --k3s-extra-args '--write-kubeconfig-mode=644'
+  --k3s-extra-args '--write-kubeconfig-mode=644' \
+  --k3s-extra-args '--disable servicelb'
 ```
 
 **Uninstall k3s**

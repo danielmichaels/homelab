@@ -1,0 +1,42 @@
+env:
+  ## REQUIRED: Set the user-visible Drone hostname, sans protocol.
+  ## Ref: https://docs.drone.io/installation/reference/drone-server-host/
+  ##
+  DRONE_SERVER_HOST: drone.k8s.dansult.space
+  ## The protocol to pair with the value in DRONE_SERVER_HOST (http or https).
+  ## Ref: https://docs.drone.io/installation/reference/drone-server-proto/
+  ##
+  DRONE_SERVER_PROTO: http
+  ## REQUIRED: Set the secret secret token that the Drone server and its Runners will use
+  ## to authenticate. This is commented out in order to leave you the ability to set the
+  ## key via a separately provisioned secret (see existingSecretName above).
+  ## Ref: https://docs.drone.io/installation/reference/drone-rpc-secret/
+  DRONE_TLS_AUTOCERT: false
+  DRONE_GIT_ALWAYS_AUTH: false
+  DRONE_RPC_SECRET: "secret"
+  DRONE_GITEA_SERVER: http://git.k8s.dansult.space
+  DRONE_GITEA_CLIENT_ID: d5906595-8dd9-47ca-8746-82e7351273e9
+  DRONE_GITEA_CLIENT_SECRET: gto_if5so27kwvjmhfunsp2uyxq2csxi53pkhocagienj5hbcmnyu7la
+  DRONE_GITEA_SKIP_VERIFY: "true"
+
+#extraSecretNamesForEnvFrom:
+#  - my-drone-secret
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+
+  hosts:
+    - host: drone.k8s.dansult.space
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+service:
+  type: NodePort
+  port: 3000
+  nodePort: 32300
