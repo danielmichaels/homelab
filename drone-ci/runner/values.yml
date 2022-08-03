@@ -1,10 +1,10 @@
 ingress:
   enabled: true
-  annotations:
-    kubernetes.io/ingress.class: "traefik"
-    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
-    traefik.ingress.kubernetes.io/redirect-entry-point: https
-    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+  annotations: {}
+#    kubernetes.io/ingress.class: "traefik"
+#    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+#    traefik.ingress.kubernetes.io/redirect-entry-point: https
+#    traefik.ingress.kubernetes.io/redirect-permanent: "true"
 
   hosts:
     - host: drone.k8s.dansult.space
@@ -13,8 +13,9 @@ ingress:
           pathType: Prefix
   tls: []
 
-
-## Each namespace listed below will be configured such that the runner can run build Pods in
+extraSecretNamesForEnvFrom:
+  - my-drone-secret
+# Each namespace listed below will be configured such that the runner can run build Pods in
 ## it. This comes in the form of a Role and a RoleBinding. If you change env.DRONE_NAMESPACE_DEFAULT
 ## or the other DRONE_NAMESPACE_* variables, make sure to update this list to include all
 ## namespaces.
@@ -28,7 +29,6 @@ env:
   ## key via a separately provisioned secret (see existingSecretName above).
   ## Ref: https://kube-runner.docs.drone.io/installation/reference/drone-rpc-secret/
   ##
-  DRONE_RPC_SECRET: "secret"
 
   ## The hostname/IP (and optionally the port) for your Kubernetes runner. Defaults to the "drone"
   ## service that the drone server Chart creates by default.
