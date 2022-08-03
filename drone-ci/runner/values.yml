@@ -1,0 +1,47 @@
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+
+  hosts:
+    - host: drone.k8s.dansult.space
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+
+## Each namespace listed below will be configured such that the runner can run build Pods in
+## it. This comes in the form of a Role and a RoleBinding. If you change env.DRONE_NAMESPACE_DEFAULT
+## or the other DRONE_NAMESPACE_* variables, make sure to update this list to include all
+## namespaces.
+rbac:
+  buildNamespaces:
+    - drone
+
+env:
+  ## REQUIRED: Set the secret secret token that the Kubernetes runner and its runners will use
+  ## to authenticate. This is commented out in order to leave you the ability to set the
+  ## key via a separately provisioned secret (see existingSecretName above).
+  ## Ref: https://kube-runner.docs.drone.io/installation/reference/drone-rpc-secret/
+  ##
+  DRONE_RPC_SECRET: "secret"
+
+  ## The hostname/IP (and optionally the port) for your Kubernetes runner. Defaults to the "drone"
+  ## service that the drone server Chart creates by default.
+  ## Ref: https://kube-runner.docs.drone.io/installation/reference/drone-rpc-host/
+  ##
+  DRONE_RPC_HOST: drone.k8s.dansult.space
+
+  ## The protocol to use for communication with Drone server.
+  ## Ref: https://kube-runner.docs.drone.io/installation/reference/drone-rpc-proto/
+  ##
+  DRONE_RPC_PROTO: http
+
+  ## Determines the default Kubernetes namespace for Drone builds to run in.
+  ## Ref: https://kube-runner.docs.drone.io/installation/reference/drone-namespace-default/
+  ##
+  DRONE_NAMESPACE_DEFAULT: drone

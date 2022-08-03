@@ -28,10 +28,3 @@ docker push git.k8s.dansult.space/<username>/<image>
 # and pull with
 docker pull git.k8s.dansult.space/<username>/<image>
 ```
-
-## Removeal
-
-```shell
-helm delete -n gitea gitea
-kubectl delete namespace gitea
-```
