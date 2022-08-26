@@ -15,3 +15,12 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 /provisioners/terraform/.env
+/provisioners/proxmox/terraform/secrets.tfvars
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
