@@ -1,0 +1,22 @@
+pm_host = "192.168.20.220"
+pm_node_name = "proxmox"
+pm_tls_insecure = true
+num_k3s_masters = 1
+num_k3s_masters_mem = 4096
+num_k3s_nodes = 2
+num_k3s_nodes_mem = 4096
+template_vm_name = "ubuntu2204-cloud"
+master_ips = [
+  "192.168.20.30"
+]
+worker_ips = [
+  "192.168.20.41",
+  "192.168.20.42",
+  "192.168.20.43",
+  "192.168.20.44",
+]
+proxmox_api_token_secret = ""
+proxmox_api_token_id = "root@pam!"
+proxmox_api_url = "https://192.168.20.220:8006/api2/json"
+ssh_key_full = "ssh-rsa AAAAB3N...."
+ssh_key = "~/.ssh/id_rsa"
