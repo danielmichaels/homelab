@@ -24,3 +24,4 @@
 *.tfstate.*
 *.tfvars
 *.tfvars.json
+/machines/k3s/inventory/my-cluster/
