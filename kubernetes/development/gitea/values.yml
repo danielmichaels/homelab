@@ -92,7 +92,8 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: git.k8s.dansult.space
+    #- host: git.k8s.dansult.space
+    - host: git.k8s.cupscanteen.com
       paths:
         - path: /
           pathType: Prefix

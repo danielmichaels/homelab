@@ -1,0 +1,136 @@
+#!/bin/bash
+
+set -e
+#set -x
+
+command -v terraform >/dev/null 2>&1 || echo "terraform must be installed"
+command -v ansible >/dev/null 2>&1 || echo "ansible must be installed"
+
+verbosity=""
+delete_my_cluster=1
+terraform=1
+ansible=1
+
+function error() {
+  echo "${arg0:-error}: $*" >&2
+  exit 1
+}
+
+function flags() {
+  while test $# -gt 0; do
+    case "${1}" in
+    -p | --playbook)
+      shift
+      export delete_my_cluster=0
+      export terraform=0
+      k3s_dir
+      shift
+      ;;
+    --destroy)
+      k3s_dir
+      terraform_destroy
+      exit 1
+      shift
+      ;;
+    --terraform)
+      export terraform=1
+      export ansible=0
+      shift
+      ;;
+    -v)
+      shift
+      verbosity="-v"
+      break
+      ;;
+    -vv)
+      shift
+      verbosity="-vv"
+      break
+      ;;
+    -vvv)
+      shift
+      verbosity="-vvv"
+      shift
+      ;;
+    -h | --help)
+      help
+      exit 1
+      ;;
+    esac
+  done
+
+}
+function k3s_dir() {
+  dir=machines/k3s
+  cd $dir || echo "could not find '$dir' directory"
+}
+function terraform_init() {
+  pwd
+  if [ "$terraform" = 0 ]; then
+    return
+  fi
+  cd terraform || echo "could not find 'terraform' directory"
+  [[ -e variables.tfvars ]] || error "[!] could not find 'variables.tfvars' file. try copying variables.tfvars.example before continuing. [!]"
+  terraform init
+}
+
+function terraform_apply() {
+  if [ "$terraform" = 0 ]; then
+    return
+  fi
+  terraform apply -var-file=variables.tfvars -auto-approve
+  cd ..
+}
+function terraform_destroy() {
+  cd terraform || echo "could not find 'terraform' directory"
+  terraform destroy -var-file=variables.tfvars -auto-approve
+}
+function run_ansible() {
+  if [ "$ansible" = 0 ]; then
+    return
+  fi
+  if [ "$delete_my_cluster" = 1 ]; then
+    rm -rf k3s/inventory/my-cluster
+  fi
+  pwd
+  ansible-playbook -i inventory/my-cluster/hosts.ini site.yml $verbosity || error "playbook failed"
+}
+
+function congrats() {
+  echo "[*]"
+  echo "The cluster has been deployed"
+  echo "[*]"
+}
+
+function help() {
+  echo -e "
+    Homelab k3s Installer
+
+    ?arg: -p, --playbook
+    run the script from the ansible playbook entrypoint only. skips terraform and
+    is useful for re-running failed playbooks.
+
+    ?arg: --destroy
+    runs terraform destroy; will wipe k3s from the homelab
+
+    ?arg: --terraform
+    runs only the terraform component. useful for regenerating the 'my-cluster'
+    directory which is needed if the group_vars is updated.
+
+    ?arg: -v
+    verbose level 1 for ansible; equivalent to ansible-playbook -v
+
+    ?arg: -vv
+    verbose level 2 for ansible; equivalent to ansible-playbook -vv
+
+    ?arg: -vvv
+    verbose level 3 for ansible; equivalent to ansible-playbook -vvv
+    "
+}
+
+flags "$@"
+k3s_dir
+terraform_init
+terraform_apply
+run_ansible
+congrats
