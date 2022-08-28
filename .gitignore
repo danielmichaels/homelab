@@ -25,3 +25,4 @@
 *.tfvars
 *.tfvars.json
 /machines/k3s/inventory/my-cluster/
+/machines/k3s/terraform/terraform-plugin-proxmox.log

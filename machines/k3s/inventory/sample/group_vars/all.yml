@@ -6,6 +6,7 @@ extra_server_args: "--write-kubeconfig-mode=644 --disable servicelb"
 extra_agent_args: ""
 copy_kubeconfig: true
 kubeconfig: "~/.kube/proxmox-config"
+traefik: true
 metallb: true
 metallb_version: "v0.13.4"
 metallb_range: "192.168.20.170-192.168.20.199"

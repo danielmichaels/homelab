@@ -50,6 +50,34 @@
     src: /tmp/metallb.yml
   when: metallb
 
+- name: check traefik deployment complete
+  environment:
+    KUBECONFIG: "{{ kubeconfig }}"
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    namespace: kube-system
+    label_selectors:
+      - app.kubernetes.io/name = traefik
+  register: output_info
+  until: output_info.resources | json_query('[*].status.conditions[?reason==`NewReplicaSetAvailable`][].status') | select ('match', 'True') | list | length == 1
+  delay: 30
+  retries: 10
+  when: traefik
+
+- name: check metallb deployment complete
+  environment:
+    KUBECONFIG: "{{ kubeconfig }}"
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    namespace: metallb-system
+    label_selectors:
+      - app = metallb
+  register: output_info
+  until: output_info.resources | json_query('[*].status.conditions[?reason==`NewReplicaSetAvailable`][].status') | select ('match', 'True') | list | length == 1
+  delay: 2
+  retries: 5
+  when: metallb
+
 - name: IP address pool - metallb
   environment:
     KUBECONFIG: "{{ kubeconfig }}"
