@@ -1,0 +1,68 @@
+{{/*apiVersion: argoproj.io/v1alpha1*/}}
+{{/*kind: ApplicationSet*/}}
+{{/*metadata:*/}}
+{{/*  name: apps-base*/}}
+{{/*  namespace: argocd*/}}
+{{/*spec:*/}}
+{{/*  generators:*/}}
+{{/*  - git:*/}}
+{{/*      repoURL: https://github.com/danielmichaels/homelab.git*/}}
+{{/*      revision: HEAD*/}}
+{{/*      directories:*/}}
+{{/*      - path: kubernetes/development/**/}}
+{{/*  template:*/}}
+{{/*    metadata:*/}}
+{{/*      name: 'app-{{path.basename}}'*/}}
+{{/*    spec:*/}}
+{{/*      project: default*/}}
+{{/*      destination:*/}}
+{{/*        namespace: '{{path.basename}}'*/}}
+{{/*        server: https://kubernetes.default.svc*/}}
+{{/*      source:*/}}
+{{/*        repoURL: https://github.com/danielmichaels/homelab.git*/}}
+{{/*        targetRevision: HEAD*/}}
+{{/*        path: '{{path}}'*/}}
+{{/*      syncPolicy:*/}}
+{{/*        automated: {}*/}}
+{{/*        syncOptions:*/}}
+{{/*        - CreateNamespace=true*/}}
+{{- range $index, $stack := .Values.stacks }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: {{ $stack.name }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  generators:
+    - git:
+        repoURL: {{ $.Values.gitops.repo }}
+        revision: {{ $.Values.gitops.revision }}
+        directories:
+          - path: {{ $stack.name }}/*
+  template:
+    metadata:
+      name: '{{ `{{path.basename}}` }}'
+    spec:
+      destination:
+        name: in-cluster
+        namespace: '{{ default `{{path.basename}}` $stack.namespace }}'
+      project: default # TODO
+      source:
+        repoURL: {{ $.Values.gitops.repo }}
+        path: '{{ `{{path}}` }}'
+        targetRevision: {{ $.Values.gitops.revision }}
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        retry:
+          limit: 10
+          backoff:
+            duration: 1m
+            factor: 2
+            maxDuration: 16m
+        syncOptions:
+          - CreateNamespace=true
+          - ApplyOutOfSyncOnly=true
+{{- end }}
