@@ -63,69 +63,69 @@
   delay: 30
   retries: 10
   when: traefik
-
-- name: check metallb deployment complete
-  environment:
-    KUBECONFIG: "{{ kubeconfig }}"
-  kubernetes.core.k8s_info:
-    kind: Deployment
-    namespace: metallb-system
-    label_selectors:
-      - app = metallb
-  register: output_info
-  until: output_info.resources | json_query('[*].status.conditions[?reason==`NewReplicaSetAvailable`][].status') | select ('match', 'True') | list | length == 1
-  delay: 2
-  retries: 5
-  when: metallb
-
-- name: IP address pool - metallb
-  environment:
-    KUBECONFIG: "{{ kubeconfig }}"
-  kubernetes.core.k8s:
-    state: present
-    definition:
-      apiVersion: metallb.io/v1beta1
-      kind: IPAddressPool
-      metadata:
-        name: default
-        namespace: metallb-system
-      spec:
-        autoAssign: true
-        addresses:
-          - "{{ metallb_range }}"
-  when: metallb
-
-- name: L2 advertisement - metallb
-  environment:
-    KUBECONFIG: "{{ kubeconfig }}"
-  kubernetes.core.k8s:
-    state: present
-    definition:
-      apiVersion: metallb.io/v1beta1
-      kind: L2Advertisement
-      metadata:
-        name: default
-        namespace: metallb-system
-      spec:
-        ipAddressPools:
-          - default
-  when: metallb
-
-# Cert Manager
-- name: Download cert manager manifest locally
-  get_url:
-    url: https://github.com/cert-manager/cert-manager/releases/download/{{ cert_manager_version }}/cert-manager.yaml
-    dest: /tmp/cert-manager.yml
-    mode: "0664"
-
-- name: Apply cert manager manifest to cluster
-  environment:
-    KUBECONFIG: "{{ kubeconfig }}"
-  kubernetes.core.k8s:
-    state: present
-    src: /tmp/cert-manager.yml
-
-# ArgoCD
+#
+#- name: check metallb deployment complete
+#  environment:
+#    KUBECONFIG: "{{ kubeconfig }}"
+#  kubernetes.core.k8s_info:
+#    kind: Deployment
+#    namespace: metallb-system
+#    label_selectors:
+#      - app = metallb
+#  register: output_info
+#  until: output_info.resources | json_query('[*].status.conditions[?reason==`NewReplicaSetAvailable`][].status') | select ('match', 'True') | list | length == 1
+#  delay: 2
+#  retries: 5
+#  when: metallb
+#
+#- name: IP address pool - metallb
+#  environment:
+#    KUBECONFIG: "{{ kubeconfig }}"
+#  kubernetes.core.k8s:
+#    state: present
+#    definition:
+#      apiVersion: metallb.io/v1beta1
+#      kind: IPAddressPool
+#      metadata:
+#        name: default
+#        namespace: metallb-system
+#      spec:
+#        autoAssign: true
+#        addresses:
+#          - "{{ metallb_range }}"
+#  when: metallb
+#
+#- name: L2 advertisement - metallb
+#  environment:
+#    KUBECONFIG: "{{ kubeconfig }}"
+#  kubernetes.core.k8s:
+#    state: present
+#    definition:
+#      apiVersion: metallb.io/v1beta1
+#      kind: L2Advertisement
+#      metadata:
+#        name: default
+#        namespace: metallb-system
+#      spec:
+#        ipAddressPools:
+#          - default
+#  when: metallb
+#
+## Cert Manager
+#- name: Download cert manager manifest locally
+#  get_url:
+#    url: https://github.com/cert-manager/cert-manager/releases/download/{{ cert_manager_version }}/cert-manager.yaml
+#    dest: /tmp/cert-manager.yml
+#    mode: "0664"
+#
+#- name: Apply cert manager manifest to cluster
+#  environment:
+#    KUBECONFIG: "{{ kubeconfig }}"
+#  kubernetes.core.k8s:
+#    state: present
+#    src: /tmp/cert-manager.yml
+#
+## ArgoCD
 - name: Create argocd namespace
   environment:
     KUBECONFIG: "{{ kubeconfig }}"
