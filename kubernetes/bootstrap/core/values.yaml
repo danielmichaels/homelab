@@ -3,7 +3,7 @@ gitops:
   revision: apps-setup
 stacks:
   - name: bootstrap
-#    namespace: argocd  # Override default value
+    namespace: argocd  # Override default value
   - name: system
 #  - name: platform
 #  - name: apps

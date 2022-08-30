@@ -12,7 +12,8 @@ default: bootstrap
 #configure:
 #	./scripts/configure
 #	git status
-
+argocd-password:
+	kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
 #metal:
 	#make -C metal
 

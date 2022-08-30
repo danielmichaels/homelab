@@ -1,7 +1,6 @@
 .POSIX:
 
-#default: namespace argocd core
-default: namespace core
+default: namespace argocd core
 
 argocd/charts: argocd/Chart.yaml
 	cd argocd \
