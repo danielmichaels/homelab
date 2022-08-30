@@ -28,3 +28,5 @@
 /machines/k3s/terraform/terraform-plugin-proxmox.log
 *.Chart.lock
 */charts/
+/kubernetes/bootstrap/argocd/Chart.lock
+/kubernetes/bootstrap/argocd/charts/

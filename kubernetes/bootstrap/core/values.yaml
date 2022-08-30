@@ -2,7 +2,7 @@ gitops:
   repo: https://github.com/danielmichaels/homelab
   revision: apps-setup
 stacks:
-#  - name: bootstrap
+  - name: bootstrap
 #    namespace: argocd  # Override default value
   - name: system
 #  - name: platform
