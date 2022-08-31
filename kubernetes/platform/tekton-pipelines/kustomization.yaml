@@ -16,3 +16,4 @@ resources:
 
 patchesStrategicMerge:
   - loadbalancer.yaml
+  - namespace.yaml
