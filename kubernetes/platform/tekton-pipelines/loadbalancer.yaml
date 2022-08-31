@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: tekton-dashboard
   namespace: tekton-pipelines
+  annotations:
+    metallb.universe.tf/address-pool: default
 spec:
   type: LoadBalancer
   ports:
