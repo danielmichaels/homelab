@@ -13,4 +13,6 @@ resources:
   # Service account
   - serviceaccount.yaml
   - clusterrolebinding.yaml
+
+patchesStrategicMerge:
   - loadbalancer.yaml
