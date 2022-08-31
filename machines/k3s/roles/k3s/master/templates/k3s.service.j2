@@ -32,3 +32,6 @@ server \
 {% if metallb is sameas true %}
 --disable servicelb \
 {% endif %}
+{% if traefik is sameas false %}
+--disable traefik \
+{% endif %}
