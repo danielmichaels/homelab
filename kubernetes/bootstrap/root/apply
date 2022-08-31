@@ -1,0 +1,14 @@
+#!/bin/bash
+VALUES="values.yaml"
+
+helm template \
+    --include-crds \
+    --namespace argocd \
+    --values "${VALUES}" \
+    argocd . \
+    | kubectl apply -n argocd -f -
+
+kubectl rollout status deployment argocd-server -n argocd
+
+echo -e "\nArgo Admin Password\n"
+printf "\t%s\n\n" "$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo)"

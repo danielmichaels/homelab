@@ -5,6 +5,10 @@ argo-cd:
     extraArgs:
       - --insecure
     config:
+      repositories: |
+        - type: helm
+          name: argo-cd
+          url: https://argoproj.github.io/argo-helm
       statusbadge.enabled: 'true'
       resource.customizations.health.argoproj.io_Application: |
         hs = {}
@@ -19,15 +23,15 @@ argo-cd:
           end
         end
         return hs
-    metrics: &metrics
-      enabled: true
-      serviceMonitor:
-        enabled: true
+#    metrics: &metrics
+#      enabled: true
+#      serviceMonitor:
+#        enabled: true
   dex:
     enabled: false
-  controller:
-    metrics: *metrics
-  repoServer:
-    metrics: *metrics
-  redis:
-    metrics: *metrics
+#  controller:
+#    metrics: *metrics
+#  repoServer:
+#    metrics: *metrics
+#  redis:
+#    metrics: *metrics

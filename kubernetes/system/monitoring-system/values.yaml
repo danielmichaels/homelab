@@ -1,0 +1,16 @@
+kube-prometheus-stack:
+  grafana:
+    adminPassword: null
+    additionalDataSources:
+      - name: Loki
+        type: loki
+        url: http://loki.loki:3100
+    grafana.ini:
+      server:
+        root_url: https://grafana.k8s.dansult.space
+  prometheus:
+    prometheusSpec:
+      ruleSelectorNilUsesHelmValues: false
+      serviceMonitorSelectorNilUsesHelmValues: false
+      podMonitorSelectorNilUsesHelmValues: false
+      probeSelectorNilUsesHelmValues: false

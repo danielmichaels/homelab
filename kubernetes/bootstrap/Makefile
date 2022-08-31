@@ -1,6 +1,6 @@
 .POSIX:
 
-default: namespace argocd core
+default: namespace argocd root
 
 argocd/charts: argocd/Chart.yaml
 	cd argocd \
@@ -15,7 +15,7 @@ argocd: argocd/charts
 	cd argocd && \
 		./apply
 
-.PHONY: core
-core:
-	cd core && \
+.PHONY: root
+root:
+	cd root && \
 		./apply
