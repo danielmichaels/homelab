@@ -45,7 +45,14 @@ function flags() {
       terraform_init
       terraform_apply
       sleep 30
-      run_ansible
+      run_ansible site
+      congrats
+      shift
+      ;;
+    --reset)
+      shift
+      k3s_dir
+      run_ansible reset
       congrats
       shift
       ;;
@@ -98,6 +105,7 @@ function terraform_destroy() {
   terraform destroy -var-file=variables.tfvars -auto-approve
 }
 function run_ansible() {
+  playbook="${1:-site}"
   if [ "$ansible" = 0 ]; then
     return
   fi
@@ -105,7 +113,7 @@ function run_ansible() {
     rm -rf k3s/inventory/my-cluster
   fi
   pwd
-  ansible-playbook -i inventory/my-cluster/hosts.ini site.yml $verbosity || error "playbook failed"
+  ansible-playbook -i inventory/my-cluster/hosts.ini $playbook.yml $verbosity || error "playbook failed"
 }
 
 function congrats() {
