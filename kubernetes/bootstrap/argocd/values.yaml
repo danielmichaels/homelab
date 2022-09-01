@@ -7,6 +7,11 @@ argo-cd:
 #      loadBalancerIP: 192.168.20.171
     extraArgs:
       - --insecure
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      hosts:
+        - argocd.dansult.space
     config:
       repositories: |
         - type: helm
