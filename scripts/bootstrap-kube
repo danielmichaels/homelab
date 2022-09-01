@@ -3,7 +3,7 @@
 function flags() {
   while test $# -gt 0; do
     case "${1}" in
-    -p | --playbook)
+    --with-k3s|--with_k3s)
       shift
       export with_k3s=1
       shift
@@ -25,4 +25,5 @@ function bootstrap() {
   make
 }
 
+flags "$@"
 bootstrap with_k3s
