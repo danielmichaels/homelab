@@ -12,8 +12,8 @@ argo-cd:
       ingressClassName: nginx
       hosts:
         - argocd.dansult.space
-      paths:
-        pathType: ImplementationSpecific
+#      paths:
+#        pathType: ImplementationSpecific
     config:
       repositories: |
         - type: helm
