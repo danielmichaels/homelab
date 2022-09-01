@@ -8,7 +8,7 @@ ingress-nginx:
 #    kind: DaemonSet
     service:
       type: LoadBalancer
-      loadBalancerIP: "192.168.20.199"
+#      loadBalancerIP: "192.168.20.199"
       annotations:
         metallb.universe.tf/loadBalancerIPs: "192.168.20.199"
         type: LoadBalancer
