@@ -2,11 +2,11 @@ k3s_version: v1.24.4+k3s1
 ansible_user: proxmox
 systemd_dir: /etc/systemd/system
 master_ip: "{{ hostvars[groups['master'][0]]['ansible_host'] | default(groups['master'][0]) }}"
-extra_server_args: "--write-kubeconfig-mode=644 --disable servicelb"
+extra_server_args: "--write-kubeconfig-mode=644 --disable servicelb --disable traefik"
 extra_agent_args: ""
 copy_kubeconfig: true
 kubeconfig: "~/.kube/proxmox-config"
-traefik: true
+traefik: false
 metallb: true
 metallb_version: "v0.13.4"
 metallb_range: "192.168.20.170-192.168.20.199"

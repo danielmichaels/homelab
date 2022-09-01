@@ -1,0 +1,6 @@
+namespace: metallb-system
+
+resources:
+  - github.com/metallb/metallb/config/native?ref=v0.13.4
+  - base/ip-address-pools.yml
+  - base/l2-advertisement.yml

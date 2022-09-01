@@ -1,0 +1,10 @@
+namespace: podinfo
+
+resources:
+  - github.com/stefanprodan/podinfo//kustomize
+  - namespace.yaml
+  - ingress.yaml
+
+patchesStrategicMerge:
+  - service.yaml
+  - hpa.yaml

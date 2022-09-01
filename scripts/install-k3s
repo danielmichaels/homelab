@@ -24,6 +24,7 @@ function flags() {
       export delete_my_cluster=0
       export terraform=0
       k3s_dir
+      run_ansible
       shift
       ;;
     --destroy)
@@ -36,6 +37,28 @@ function flags() {
       export terraform=1
       export ansible=0
       shift
+      ;;
+    --redeploy)
+      shift
+      k3s_dir
+      terraform_destroy
+      terraform_init
+      terraform_apply
+      sleep 30
+      run_ansible site
+      congrats
+      shift
+      ;;
+    --reset)
+      shift
+      k3s_dir
+      run_ansible reset
+      congrats
+      shift
+      ;;
+    --bootstrap-kube)
+      shift
+      ./scripts/bootstrap-kube
       ;;
     -v)
       shift
@@ -86,6 +109,7 @@ function terraform_destroy() {
   terraform destroy -var-file=variables.tfvars -auto-approve
 }
 function run_ansible() {
+  playbook="${1:-site}"
   if [ "$ansible" = 0 ]; then
     return
   fi
@@ -93,7 +117,7 @@ function run_ansible() {
     rm -rf k3s/inventory/my-cluster
   fi
   pwd
-  ansible-playbook -i inventory/my-cluster/hosts.ini site.yml $verbosity || error "playbook failed"
+  ansible-playbook -i inventory/my-cluster/hosts.ini $playbook.yml $verbosity || error "playbook failed"
 }
 
 function congrats() {
@@ -116,6 +140,10 @@ function help() {
     ?arg: --terraform
     runs only the terraform component. useful for regenerating the 'my-cluster'
     directory which is needed if the group_vars is updated.
+
+    ?arg: --redeploy
+    re-runs the script but starts by tearing down any existing virtual machines.
+    effectively calls terraform_destroy before redeploying everything. useful in test.
 
     ?arg: -v
     verbose level 1 for ansible; equivalent to ansible-playbook -v

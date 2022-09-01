@@ -1,0 +1,17 @@
+#!/bin/sh
+
+helm dependency update
+
+helm template \
+    --include-crds \
+    --namespace argocd \
+    --atomic \
+    argocd . \
+    | kubectl apply -n argocd -f -
+
+kubectl -n argocd wait --timeout=180s --for condition=Established \
+       crd/applications.argoproj.io \
+       crd/applicationsets.argoproj.io
+
+kubectl rollout status deployment argocd-server -n argocd
+kubectl rollout status deployment argocd-repo-server -n argocd

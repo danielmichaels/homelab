@@ -1,0 +1,28 @@
+#!/bin/bash
+
+function flags() {
+  while test $# -gt 0; do
+    case "${1}" in
+    -p | --playbook)
+      shift
+      export with_k3s=1
+      shift
+      ;;
+    esac
+  done
+}
+
+function error() {
+  echo "${arg0:-error}: $*" >&2
+  exit 1
+}
+
+function bootstrap() {
+  if [ "$with_k3s" = 1 ]; then
+    bash ./scripts/install-k3s
+  fi
+  cd kubernetes || error "[!] could not 'cd' into folder 'kubernetes'"
+  make
+}
+
+bootstrap with_k3s
