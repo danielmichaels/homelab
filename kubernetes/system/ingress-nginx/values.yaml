@@ -5,6 +5,10 @@ ingress-nginx:
     type: LoadBalancer
     loadBalancerIP: "192.168.20.199"
   controller:
+    annotations:
+      metallb.universe.tf/loadBalancerIPs: "192.168.20.199"
+      type: LoadBalancer
+    loadBalancerIP: "192.168.20.199"
     admissionWebhooks:
       timeoutSeconds: 30
 #    metrics:
