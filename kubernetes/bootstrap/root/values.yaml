@@ -6,4 +6,4 @@ stacks:
     namespace: argocd  # Override default value
   - name: system
   - name: platform
-#  - name: apps
+  - name: apps

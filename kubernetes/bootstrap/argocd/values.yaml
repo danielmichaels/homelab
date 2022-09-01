@@ -2,7 +2,9 @@ argo-cd:
   server:
     service:
       type: LoadBalancer
-      loadBalancerIP: 192.168.20.171
+      annotations:
+        metallb.universe.tf/loadBalancerIPs: "192.168.20.171"
+#      loadBalancerIP: 192.168.20.171
     extraArgs:
       - --insecure
     config:
