@@ -70,8 +70,13 @@ How to deploy can be found [here](machines/home-assistant)
 
 Once there is a viable template in Proxmox, it's time to deploy the [k3s](https://k3s.io) onto it.
 
-To get started quickly, run `./scripts/install-k3s`. The script can take optional arguments, run
-`./scripts/install-k3s -h` to see them.
+To get started quickly, run `./scripts/bootstrap-kube --with-k3s`. 
+
+For more granular control, run the script `./scripts/install-k3s`. It can take optional arguments,
+run `./scripts/install-k3s -h` to see them.
+
+If you've already run Ansible and set up the VM's in proxmox, and want to re-run the kubernetes 
+bootstrap then use `./scripts/bootstrap-kube`
 
 **Note**
 

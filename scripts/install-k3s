@@ -56,6 +56,10 @@ function flags() {
       congrats
       shift
       ;;
+    --bootstrap-kube)
+      shift
+      ./scripts/bootstrap-kube
+      ;;
     -v)
       shift
       verbosity="-v"
